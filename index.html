@@ -1,202 +1,231 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KORA — Mapping of Researchers for Kids AI Safety</title>
+<title>KORA — Ecosystem Penetration Map</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#ffffff;--surface:#f8f9fa;--card:#f1f3f5;--border:#dee2e6;--text:#212529;--muted:#6c757d;--accent:#6c5ce7;--accent2:#0d9488;--red:#dc2626;--orange:#ea580c;--yellow:#ca8a04;--green:#16a34a;--blue:#2563eb;--contact:#0d9488;--external:#6366f1;--key:#dc2626}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
-.container{max-width:1400px;margin:0 auto;padding:24px}
-h1{font-size:1.6rem;font-weight:700;margin-bottom:4px}
-.subtitle{color:var(--muted);font-size:.85rem;margin-bottom:24px}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+    background: linear-gradient(135deg, #f0f4ff 0%, #fafbff 100%);
+    min-height: 100vh;
+    padding: 36px 24px 48px;
+    color: #1e3a5f;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
 
-/* Legend */
-.researcher-legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:.8rem;align-items:center}
-.legend-item{display:flex;align-items:center;gap:5px}
-.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
-.legend-dot.gap{background:var(--red)}
-.legend-dot.fragile{background:var(--orange)}
-.legend-dot.moderate{background:var(--yellow)}
-.legend-dot.good{background:var(--green)}
-.tag-demo{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:500}
-.tag-contact-demo{background:rgba(13,148,136,.1);color:#0d7377;border:1px solid rgba(13,148,136,.4)}
-.tag-key-demo{background:rgba(220,38,38,.1);color:#b91c1c;border:2px solid rgba(220,38,38,.5);font-weight:600}
-.tag-identified-demo{background:rgba(99,102,241,.1);color:#4f46e5;border:1px solid rgba(99,102,241,.4)}
+  /* Header */
+  .header { text-align: center; margin-bottom: 28px; }
+  .eyebrow {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #1e3a5f; }
+  .eyebrow-text {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: #64748b; font-weight: 600;
+  }
+  h1 { font-size: 26px; font-weight: 800; color: #1e3a5f; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #64748b; }
 
-/* Filter buttons */
-.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.78rem;cursor:pointer;transition:.2s}
-.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:#fff;background:var(--accent)}
+  /* KPI Strip */
+  .kpis {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi {
+    border-radius: 12px; padding: 14px 16px;
+    border: 1px solid transparent;
+  }
+  .kpi-value { font-size: 26px; font-weight: 800; }
+  .kpi-label { font-size: 11px; font-weight: 600; color: #334155; margin-top: 2px; }
+  .kpi-sub { font-size: 10px; color: #64748b; margin-top: 3px; }
 
-/* Table */
-.risk-table{width:100%;border-collapse:separate;border-spacing:0;margin-bottom:16px}
-.risk-table th{background:var(--card);color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);font-weight:600;position:sticky;top:0;z-index:1}
-.risk-table th:first-child{border-radius:10px 0 0 0;width:50px;text-align:center}
-.risk-table th:last-child{border-radius:0 10px 0 0;width:50px;text-align:center}
-.risk-table th:nth-child(2){width:32%}
-.risk-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:.85rem}
-.risk-table td:first-child{text-align:center;font-weight:700;color:var(--accent);font-size:.8rem;white-space:nowrap}
-.risk-table td:last-child{text-align:center;vertical-align:middle}
-.risk-table tr:hover td{background:rgba(108,92,231,.06)}
+  /* Chart Card */
+  .chart-card {
+    background: #fff; border-radius: 20px; padding: 28px 20px 20px;
+    box-shadow: 0 4px 24px rgba(30,58,95,0.08); border: 1px solid #e8eefa;
+    margin-bottom: 24px;
+  }
+  .chart-wrap { position: relative; height: 460px; }
 
-.cat-header-row td,.cat-header-row td:first-child{background:var(--surface) !important;padding:12px 14px;font-weight:700;font-size:.9rem;border-bottom:2px solid var(--border);text-align:left !important;color:var(--text)}
-.cat-header-row td .cat-num{background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px;font-size:.73rem;font-weight:700;margin-right:8px}
+  /* Legend */
+  .legend {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+    margin-top: 16px; font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-.risk-name{font-weight:600;font-size:.85rem;margin-bottom:3px}
-.risk-subcats{color:var(--muted);font-size:.75rem;line-height:1.4;font-style:italic}
+  .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 20px; }
 
-/* Researcher tags */
-.researchers-list{display:flex;flex-wrap:wrap;gap:4px}
-.tag-contact{display:inline-block;background:rgba(13,148,136,.1);color:#0d7377;border:1px solid rgba(13,148,136,.4);padding:2px 10px;border-radius:12px;font-size:.73rem;font-weight:500}
-.tag-identified{display:inline-block;background:rgba(99,102,241,.1);color:#4f46e5;border:1px solid rgba(99,102,241,.4);padding:2px 10px;border-radius:12px;font-size:.73rem;font-weight:500}
-.tag-key{display:inline-block;background:rgba(220,38,38,.1);color:#b91c1c;border:2px solid rgba(220,38,38,.5);padding:2px 10px;border-radius:12px;font-size:.73rem;font-weight:600}
-
-.coverage-dot{width:14px;height:14px;border-radius:50%;display:inline-block}
-.coverage-dot.gap{background:var(--red)}
-.coverage-dot.fragile{background:var(--orange)}
-.coverage-dot.moderate{background:var(--yellow)}
-.coverage-dot.good{background:var(--green)}
-
-.dissolved-row td{opacity:.5;font-style:italic}
-.dissolved-row .cat-dissolved{background:#adb5bd;color:#fff;padding:2px 10px;border-radius:20px;font-size:.7rem;font-weight:600;text-transform:uppercase;margin-right:6px}
-.note-badge{background:var(--accent);color:#fff;padding:1px 8px;border-radius:10px;font-size:.7rem;font-weight:600;margin-right:6px;font-style:normal}
-
-.gap-text{color:#b91c1c;font-size:.78rem;font-style:italic}
-
-@media(max-width:768px){.risk-table th:nth-child(2){width:auto}}
+  @media (max-width: 600px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .kpis > :last-child { grid-column: 1 / -1; }
+    h1 { font-size: 20px; }
+  }
 </style>
 </head>
 <body>
 <div class="container">
-<h1>KORA</h1>
-<p class="subtitle">Mapping of Researchers for Kids AI Safety</p>
 
-<div class="researcher-legend">
-  <div class="legend-item"><span class="legend-dot gap"></span> Gap (0)</div>
-  <div class="legend-item"><span class="legend-dot fragile"></span> Fragile (1)</div>
-  <div class="legend-item"><span class="legend-dot moderate"></span> Moderate (2-4)</div>
-  <div class="legend-item"><span class="legend-dot good"></span> Good (5+)</div>
-  <div style="border-left:1px solid var(--border);padding-left:16px;margin-left:4px"><span class="tag-demo tag-key-demo">Name</span> Key Contributor</div>
-  <div><span class="tag-demo tag-contact-demo">Name</span> KORA Contact</div>
-  <div><span class="tag-demo tag-identified-demo">Name</span> Identified Researcher <span style="font-size:.75rem;color:var(--muted)">(★ = to contact)</span></div>
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">
+      <div class="dot"></div>
+      <span class="eyebrow-text">KORA · Ecosystem Intelligence</span>
+      <div class="dot"></div>
+    </div>
+    <h1>Ecosystem Penetration Map</h1>
+    <p class="subtitle">09 mars 2026</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi" style="background:#e8eefa; border-color:#1e3a5f22;">
+      <div class="kpi-value" style="color:#1e3a5f;">161</div>
+      <div class="kpi-label">Institutions engagées</div>
+      <div class="kpi-sub">sur 197 contacts (bdd)</div>
+    </div>
+    <div class="kpi" style="background:#dbeafe; border-color:#2563eb22;">
+      <div class="kpi-value" style="color:#2563eb;">117</div>
+      <div class="kpi-label">Institutions actives</div>
+      <div class="kpi-sub">73% taux d'engagement</div>
+    </div>
+    <div class="kpi" style="background:#d1fae5; border-color:#05996922;">
+      <div class="kpi-value" style="color:#059669;">15</div>
+      <div class="kpi-label">Pays représentés</div>
+      <div class="kpi-sub">dans la base de contacts</div>
+    </div>
+    <div class="kpi" style="background:#fef3c7; border-color:#d9770622;">
+      <div class="kpi-value" style="color:#d97706;">5</div>
+      <div class="kpi-label">Continents</div>
+      <div class="kpi-sub">Amériques · Europe · Asie · Afrique · Océanie</div>
+    </div>
+    <div class="kpi" style="background:#ede9fe; border-color:#7c3aed22;">
+      <div class="kpi-value" style="color:#7c3aed;">4</div>
+      <div class="kpi-label">Hot Tech ont run KORA</div>
+      <div class="kpi-sub">FAB · Pebble · MyDD.ai · HeyOtto</div>
+    </div>
+    <div class="kpi" style="background:#fff1f2; border-color:#e1193322;">
+      <div class="kpi-value" style="color:#e11933;">0</div>
+      <div class="kpi-label">Publications Grand Média</div>
+      <div class="kpi-sub">Objectif · WaPo · Guardian · TechCrunch · Axios</div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-wrap">
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <p class="footer">Source : KORA_Strategic_Contacts_060326_EN.xlsx &nbsp;·&nbsp; 197 contacts &nbsp;·&nbsp; 161 institutions distinctes &nbsp;·&nbsp; 15 pays · 5 continents &nbsp;·&nbsp; Mise à jour : 09/03/2026</p>
 </div>
 
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterResearchers('all')">All</button>
-  <button class="filter-btn" onclick="filterResearchers('contact')">KORA Contacts only</button>
-  <button class="filter-btn" onclick="filterResearchers('key')">Key Contributors</button>
-  <button class="filter-btn" onclick="filterResearchers('identified')">Identified Researchers</button>
-</div>
-
-<table class="risk-table">
-<thead>
-<tr><th>#</th><th>Risk</th><th>Researchers</th><th>●</th></tr>
-</thead>
-<tbody>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 1</span> Harmful &amp; Dangerous Content</td></tr>
-<tr><td>1.1</td><td><div class="risk-name">Violence &amp; Physical Harm</div><div class="risk-subcats">Violent content generation · Weapon/harm instructions · Glorification of violence toward minors</div></td><td><span class="gap-text">⚠ GAP</span></td><td><span class="coverage-dot gap"></span></td></tr>
-<tr><td>1.2</td><td><div class="risk-name">Self-Harm &amp; Eating Disorders</div><div class="risk-subcats">Pro-self-harm content · Eating disorder promotion · Suicide ideation · Digital addiction patterns</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">A. Lembke</span><span class="tag-identified" data-type="identified">N. Vasan</span><span class="tag-identified" data-type="identified">R. Hanebutt</span><span class="tag-key" data-type="key">M. Biel</span><span class="tag-identified" data-type="identified">M. Luigi</span><span class="tag-key" data-type="key">L. Erickson-Schroth</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>1.3</td><td><div class="risk-name">Regulated &amp; Illegal Activities</div><div class="risk-subcats">Drug/substance guidance · Illegal activity assistance · Age-restricted content facilitation</div></td><td><span class="gap-text">⚠ GAP</span></td><td><span class="coverage-dot gap"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 2</span> Sexual Content &amp; Child Safety</td></tr>
-<tr><td>2.1</td><td><div class="risk-name">Sexual Content &amp; Age-Inappropriate Material</div><div class="risk-subcats">Age-inappropriate sexual material · Pornographic content generation · Sexualized language</div></td><td><span class="gap-text">⚠ GAP</span></td><td><span class="coverage-dot gap"></span></td></tr>
-<tr><td>2.2</td><td><div class="risk-name">Sexual Violence &amp; Abuse</div><div class="risk-subcats">CSAM · Sexual exploitation · AI-generated abuse material</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">M. Seto</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr><td>2.3</td><td><div class="risk-name">Sexual Grooming &amp; Boundary Violations</div><div class="risk-subcats">Online grooming patterns · Boundary normalization · Predatory interaction design</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">M. Seto</span><span class="tag-key" data-type="key">S. Hinduja</span><span class="tag-contact" data-type="contact">A. Razi</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>2.4</td><td><div class="risk-name">Unsafe Sexual Guidance</div><div class="risk-subcats">Inappropriate sexual health advice · Premature sexual education · Risk normalization</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">★ D. Suskind</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 3</span> Mental &amp; Emotional Wellbeing</td></tr>
-<tr><td>3.1</td><td><div class="risk-name">Sycophancy</div><div class="risk-subcats">Excessive validation · Confirmation bias reinforcement · Lack of constructive feedback</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">J. Suh</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr><td>3.2</td><td><div class="risk-name">Fear, Trauma &amp; Distress</div><div class="risk-subcats">Traumatic content exposure · Anxiety-inducing interactions · Phobia triggering</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">N. Vasan</span><span class="tag-identified" data-type="identified">R. Hanebutt</span><span class="tag-key" data-type="key">M. Biel</span><span class="tag-key" data-type="key">L. Erickson-Schroth</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>3.3</td><td><div class="risk-name">Mental Health Mishandling</div><div class="risk-subcats">Inappropriate mental health advice · Crisis mismanagement · Therapeutic boundary violations</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">A. Lembke</span><span class="tag-identified" data-type="identified">N. Vasan</span><span class="tag-identified" data-type="identified">R. Hanebutt</span><span class="tag-key" data-type="key">M. Biel</span><span class="tag-identified" data-type="identified">M. Luigi</span><span class="tag-key" data-type="key">L. Erickson-Schroth</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>3.4</td><td><div class="risk-name">Emotional Grooming &amp; Manipulation</div><div class="risk-subcats">Emotional dependency creation · Manipulative persuasion · Vulnerability exploitation</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">A. Lee</span><span class="tag-identified" data-type="identified">R. Hanebutt</span><span class="tag-key" data-type="key">M. Cerioli</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>3.5</td><td><div class="risk-name">Parasocial Attachment</div><div class="risk-subcats">AI companion over-attachment · Human relationship substitution · Anthropomorphization risks</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">A. Lee</span><span class="tag-contact" data-type="contact">A. Przybylski</span><span class="tag-identified" data-type="identified">R. Baharloo</span><span class="tag-contact" data-type="contact">S. Fulay</span><span class="tag-contact" data-type="contact">H. Shrawgi</span><span class="tag-key" data-type="key">M. Cerioli</span><span class="tag-identified" data-type="identified">★ S. Tisseron</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr class="dissolved-row cat-header-row"><td colspan="4"><span class="cat-dissolved">DISSOLVED</span> Cat 4 — Educational &amp; Epistemic Integrity &nbsp; <span class="note-badge">V2</span> 4.1→5.1 · 4.2→8.2 · 4.3→8.1</td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 5</span> Hallucinations, Bias &amp; Hate</td></tr>
-<tr><td>5.1</td><td><div class="risk-name">Factual Hallucinations &amp; Misinformation</div><div class="risk-subcats">False information generation · Confident fabrication · Source falsification · Educational misinformation</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">M. Reese</span><span class="tag-identified" data-type="identified">M. Pellat</span><span class="tag-identified" data-type="identified">★ Y. Jernite</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>5.2</td><td><div class="risk-name">Bias &amp; Stereotyping</div><div class="risk-subcats">Algorithmic bias · Cultural stereotypes · Gender/racial discrimination · Representation harms</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">★ Y. Jernite</span><span class="tag-identified" data-type="identified">S. Afroogh</span><span class="tag-identified" data-type="identified">J. Jiao</span><span class="tag-contact" data-type="contact">K. Dementaviciute</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>5.3</td><td><div class="risk-name">Radicalization &amp; Extremism</div><div class="risk-subcats">Extremist content exposure · Radicalization pathways · Hate group amplification</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">C. François</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 6</span> Social &amp; Family Impact</td></tr>
-<tr><td>6.1</td><td><div class="risk-name">Undermining Authority &amp; Trust</div><div class="risk-subcats">Parental authority erosion · Teacher authority undermining · Institutional trust degradation</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">A. Lee</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr><td>6.2</td><td><div class="risk-name">Harmful Social Norms &amp; Behavior</div><div class="risk-subcats">Cyberbullying facilitation · Social norm distortion · Peer relationship damage · Antisocial behaviors</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">S. Hinduja</span><span class="tag-contact" data-type="contact">A. Razi</span><span class="tag-contact" data-type="contact">Y. Huang</span><span class="tag-contact" data-type="contact">A. Przybylski</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>6.4</td><td><div class="risk-name">Domestic Harm, Neglect &amp; Home Instability</div><div class="risk-subcats">Family dynamic disruption · Neglect amplification · Domestic conflict escalation</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">M. Seto</span></div></td><td><span class="coverage-dot fragile"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 7</span> Online Safety &amp; Privacy</td></tr>
-<tr><td>7.1</td><td><div class="risk-name">Risky Online Behaviors &amp; Commercial Exploitation</div><div class="risk-subcats">Unsafe online practices · Commercial manipulation · Dark patterns · Micro-transaction exploitation · Ad targeting</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">S. Hinduja</span><span class="tag-contact" data-type="contact">A. Razi</span><span class="tag-contact" data-type="contact">Y. Wang</span><span class="tag-contact" data-type="contact">Y. Huang</span><span class="tag-contact" data-type="contact">Y. Yu</span><span class="tag-contact" data-type="contact">M. Namvarpour</span><span class="tag-contact" data-type="contact">T. Chang</span><span class="tag-identified" data-type="identified">S.A. Solkar</span><span class="tag-contact" data-type="contact">A. Blake</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>7.2</td><td><div class="risk-name">Cybersecurity</div><div class="risk-subcats">Phishing vulnerability · Malware facilitation · Social engineering attacks · Data breach risks</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">S. Hinduja</span><span class="tag-contact" data-type="contact">Y. Wang</span><span class="tag-contact" data-type="contact">M. Namvarpour</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>7.3</td><td><div class="risk-name">Privacy Violations</div><div class="risk-subcats">Data collection without consent · Behavioral profiling · Location tracking · Biometric data exploitation</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">Y. Wang</span><span class="tag-contact" data-type="contact">A. Razi</span><span class="tag-contact" data-type="contact">Y. Yu</span><span class="tag-contact" data-type="contact">M. Namvarpour</span><span class="tag-contact" data-type="contact">T. Chang</span><span class="tag-identified" data-type="identified">S.A. Solkar</span><span class="tag-contact" data-type="contact">C. François</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 8</span> Cognitive Mismatch &amp; Desirable Difficulties</td></tr>
-<tr><td>8.1</td><td><div class="risk-name">Cognitive Mismatch</div><div class="risk-subcats">Developmental inappropriateness · Theory of mind gaps · Abstract reasoning mismatch · Language level mismatch</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">A. Lee</span><span class="tag-contact" data-type="contact">E. Kosoy</span><span class="tag-contact" data-type="contact">S. Dehaene</span><span class="tag-key" data-type="key">M. Frank</span><span class="tag-identified" data-type="identified">R. Baharloo</span><span class="tag-contact" data-type="contact">S. Fulay</span><span class="tag-contact" data-type="contact">H. Shrawgi</span><span class="tag-key" data-type="key">L.E. Schulz</span><span class="tag-identified" data-type="identified">★ G. Borst</span><span class="tag-identified" data-type="identified">★ D. Suskind</span><span class="tag-identified" data-type="identified">★ J. Cassell</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>8.2</td><td><div class="risk-name">Cognitive Substitution</div><div class="risk-subcats">Critical thinking atrophy · Homework/writing delegation · Effort avoidance · Learning process bypass (product AND process)</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">N. Kucirkova</span><span class="tag-contact" data-type="contact">M. Reese</span><span class="tag-identified" data-type="identified">N. Gillani</span><span class="tag-contact" data-type="contact">J.F. Fisher</span><span class="tag-contact" data-type="contact">J. Suh</span><span class="tag-identified" data-type="identified">★ G. Borst</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>8.3</td><td><div class="risk-name">Rigid Worldview Shaping</div><div class="risk-subcats">Echo chamber creation · Perspective narrowing · Intellectual diversity reduction</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">M. Frank</span><span class="tag-key" data-type="key">N. Kucirkova</span><span class="tag-identified" data-type="identified">★ G. Borst</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>8.4</td><td><div class="risk-name">Autonomy Displacement</div><div class="risk-subcats">Decision-making delegation · Agency erosion · Self-regulation undermining · Choice architecture manipulation</div></td><td><div class="researchers-list"><span class="tag-identified" data-type="identified">A. Lee</span><span class="tag-identified" data-type="identified">★ S. Tisseron</span><span class="tag-key" data-type="key">N. Kucirkova</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>8.5</td><td><div class="risk-name">Sensorimotor &amp; Social Displacement</div><div class="risk-subcats">Screen-based substitution · Embodied learning loss · Social skill development gaps · Physical play reduction</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">S. Dehaene</span><span class="tag-key" data-type="key">M. Biel</span><span class="tag-identified" data-type="identified">K. Jolley</span><span class="tag-contact" data-type="contact">C. Ford</span><span class="tag-contact" data-type="contact">KX Jin</span><span class="tag-identified" data-type="identified">A. Lee</span><span class="tag-identified" data-type="identified">★ D. Suskind</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr class="cat-header-row"><td colspan="4"><span class="cat-num">Cat 9</span> Systemic &amp; Collective Risks</td></tr>
-<tr><td>9.1</td><td><div class="risk-name">Cultural Erosion</div><div class="risk-subcats">Cultural homogenization · Indigenous knowledge displacement · Language diversity loss · Local identity dilution</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">N. Kucirkova</span><span class="tag-contact" data-type="contact">K. Dementaviciute</span><span class="tag-identified" data-type="identified">A. Chauhan</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>9.2</td><td><div class="risk-name">AI Divide</div><div class="risk-subcats">Access inequality · Digital divide amplification · Resource disparity · Quality gap across demographics</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">J.F. Fisher</span><span class="tag-identified" data-type="identified">N. Gillani</span><span class="tag-contact" data-type="contact">A. Buher</span><span class="tag-identified" data-type="identified">A. Chauhan</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>9.3</td><td><div class="risk-name">Epistemic Power Concentration</div><div class="risk-subcats">Knowledge gatekeeping · Curriculum influence · Platform monopoly · Research agenda control</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">C. Ford</span><span class="tag-identified" data-type="identified">M. Pellat</span><span class="tag-identified" data-type="identified">S. Afroogh</span><span class="tag-identified" data-type="identified">J. Jiao</span><span class="tag-contact" data-type="contact">C. François</span><span class="tag-identified" data-type="identified">C. Hall</span><span class="tag-identified" data-type="identified">J. Ryan</span><span class="tag-identified" data-type="identified">★ Y. Jernite</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>9.4</td><td><div class="risk-name">Normative Displacement</div><div class="risk-subcats">Value system imposition · Ethical framework displacement · Moral development interference</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">A. Przybylski</span><span class="tag-contact" data-type="contact">A. Bridgen</span><span class="tag-contact" data-type="contact">K. Dementaviciute</span></div></td><td><span class="coverage-dot moderate"></span></td></tr>
-<tr><td>9.5</td><td><div class="risk-name">Educational Fabric Disruption</div><div class="risk-subcats">Teacher role transformation · Curriculum displacement · Assessment integrity · Institutional adaptation pressure</div></td><td><div class="researchers-list"><span class="tag-key" data-type="key">N. Kucirkova</span><span class="tag-contact" data-type="contact">M. Reese</span><span class="tag-contact" data-type="contact">J.F. Fisher</span><span class="tag-identified" data-type="identified">N. Gillani</span><span class="tag-contact" data-type="contact">A. Buher</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-<tr><td>9.6</td><td><div class="risk-name">Cognitive Homogenization</div><div class="risk-subcats">Thought pattern convergence · Creativity reduction · Neurodiversity pressure · Standardized reasoning</div></td><td><div class="researchers-list"><span class="tag-contact" data-type="contact">S. Dehaene</span><span class="tag-key" data-type="key">M. Frank</span><span class="tag-identified" data-type="identified">K. Jolley</span><span class="tag-contact" data-type="contact">C. Ford</span><span class="tag-key" data-type="key">N. Kucirkova</span><span class="tag-identified" data-type="identified">C. Hall</span><span class="tag-contact" data-type="contact">A. Bridgen</span><span class="tag-identified" data-type="identified">★ G. Borst</span></div></td><td><span class="coverage-dot good"></span></td></tr>
-</tbody>
-</table>
-
-<div style="text-align:center;margin:32px 0 16px">
-<button onclick="downloadXLSX()" style="padding:10px 28px;border-radius:24px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px">⬇ Download Excel</button>
-</div>
-
-</div><!-- container -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-function downloadXLSX(){
-  const rows=[['#','Category','Risk','Sub-categories','Researchers','Type','Coverage']];
-  let currentCat='';
-  document.querySelectorAll('.risk-table tbody tr').forEach(tr=>{
-    if(tr.classList.contains('cat-header-row')){
-      const t=tr.textContent.trim();
-      if(tr.classList.contains('dissolved-row')) currentCat='Cat 4 (DISSOLVED)';
-      else currentCat=t;
-      return;
-    }
-    const tds=tr.querySelectorAll('td');
-    if(tds.length<4) return;
-    const num=tds[0].textContent.trim();
-    const nameEl=tds[1].querySelector('.risk-name');
-    const subEl=tds[1].querySelector('.risk-subcats');
-    const name=nameEl?nameEl.textContent.trim():'';
-    const sub=subEl?subEl.textContent.trim().replace(/·/g,';'):'';
-    const tags=tds[2].querySelectorAll('[data-type]');
-    let researchers=[];
-    if(tags.length===0) researchers=['GAP'];
-    else tags.forEach(t=>researchers.push(t.textContent.trim()));
-    const types=[];
-    if(tags.length===0) types.push('—');
-    else tags.forEach(t=>types.push(t.getAttribute('data-type')));
-    const dot=tds[3].querySelector('.coverage-dot');
-    let cov='';
-    if(dot){
-      if(dot.classList.contains('gap')) cov='GAP (0)';
-      else if(dot.classList.contains('fragile')) cov='Fragile (1)';
-      else if(dot.classList.contains('moderate')) cov='Moderate (2-4)';
-      else if(dot.classList.contains('good')) cov='Good (5+)';
-    }
-    rows.push([num,currentCat,name,sub,researchers.join('; '),types.join('; '),cov]);
+const SECTORS = [
+  'AI Labs', 'EdTech', 'School Districts', 'Teachers',
+  'Parents/Family', 'Regulators/Policy', 'Nonprofits/Advocacy',
+  'Research/Academia', 'Media', 'Others'
+];
+
+// Institutions distinctes par secteur — 09/03/2026
+const NEW_ALL = [5, 17, 2, 0, 14,  6, 29, 38, 15, 35];
+const NEW_ACT = [5, 11, 1, 0,  7,  5, 24, 31, 12, 21];
+
+const C = {
+  navy:     'rgba(30,58,95,1)',
+  navyFill: 'rgba(30,58,95,0.2)',
+  blue:     'rgba(37,99,235,1)',
+  blueFill: 'rgba(37,99,235,0.25)',
+};
+
+function initChart() {
+  const ctx = document.getElementById('radarChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: SECTORS,
+      datasets: [
+        {
+          label: 'Institutions (161)',
+          data: NEW_ALL,
+          borderColor: C.navy,
+          backgroundColor: C.navyFill,
+          borderWidth: 2.5,
+          pointBackgroundColor: C.navy,
+          pointRadius: 5,
+          order: 2,
+        },
+        {
+          label: 'Institutions actives (117)',
+          data: NEW_ACT,
+          borderColor: C.blue,
+          backgroundColor: C.blueFill,
+          borderWidth: 2,
+          pointBackgroundColor: C.blue,
+          pointRadius: 5,
+          order: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 600 },
+      scales: {
+        r: {
+          min: 0,
+          max: 50,
+          ticks: {
+            stepSize: 10,
+            color: '#94a3b8',
+            font: { size: 10 },
+            backdropColor: 'transparent',
+          },
+          grid: { color: '#e2e8f0' },
+          angleLines: { color: '#e2e8f0' },
+          pointLabels: {
+            color: '#334155',
+            font: { size: 12, weight: '600' },
+          },
+        },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}`,
+          },
+          backgroundColor: '#fff',
+          titleColor: '#1e3a5f',
+          bodyColor: '#475569',
+          borderColor: '#e2e8f0',
+          borderWidth: 1,
+          padding: 12,
+          titleFont: { weight: '700' },
+        },
+      },
+    },
   });
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:6},{wch:30},{wch:30},{wch:50},{wch:40},{wch:20},{wch:14}];
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'KORA Coverage');
-  XLSX.writeFile(wb,'KORA_Coverage_Dashboard.xlsx');
+
+  // Legend
+  const legend = document.getElementById('legend');
+  legend.innerHTML = [
+    { color: C.navy, label: 'Institutions (161)' },
+    { color: C.blue, label: 'Institutions actives (117)' },
+  ].map(item =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${item.color};"></div><span style="color:#475569;">${item.label}</span></div>`
+  ).join('');
 }
 
-function filterResearchers(type){
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('.tag-contact,.tag-key,.tag-identified').forEach(tag=>{
-    const t=tag.getAttribute('data-type');
-    if(type==='all') tag.style.display='';
-    else tag.style.display=(t===type?'':'none');
-  });
-}
+initChart();
 </script>
 </body>
 </html>
