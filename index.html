@@ -128,30 +128,30 @@
       <div class="dot"></div>
     </div>
     <h1>Ecosystem Penetration Map</h1>
-    <p class="subtitle">Strategic positioning across 9 sectors &nbsp;·&nbsp; Updated March 2026 &nbsp;·&nbsp; Target: 20 contacts per sector</p>
+    <p class="subtitle">Institutions engagées par secteur &nbsp;·&nbsp; 06 mars 2026 &nbsp;·&nbsp; Cible&nbsp;: 20 institutions par secteur</p>
   </div>
 
   <!-- KPIs -->
   <div class="kpis">
     <div class="kpi" style="background:#e8eefa; border-color:#1e3a5f22;">
-      <div class="kpi-value" style="color:#1e3a5f;">197</div>
-      <div class="kpi-label">Total Contacts</div>
-      <div class="kpi-sub">+101 from previous benchmark</div>
+      <div class="kpi-value" style="color:#1e3a5f;">168</div>
+      <div class="kpi-label">Institutions engagées</div>
+      <div class="kpi-sub">sur 197 contacts (bdd)</div>
     </div>
     <div class="kpi" style="background:#dbeafe; border-color:#2563eb22;">
-      <div class="kpi-value" style="color:#2563eb;">143</div>
-      <div class="kpi-label">Active (In Conversation)</div>
-      <div class="kpi-sub">73% engagement rate</div>
+      <div class="kpi-value" style="color:#2563eb;">121</div>
+      <div class="kpi-label">Institutions actives</div>
+      <div class="kpi-sub">72% taux d'engagement</div>
     </div>
     <div class="kpi" style="background:#d1fae5; border-color:#05996922;">
       <div class="kpi-value" style="color:#059669;">3/9</div>
-      <div class="kpi-label">Sectors at Target</div>
-      <div class="kpi-sub">≥ 20 contacts reached</div>
+      <div class="kpi-label">Secteurs à la cible</div>
+      <div class="kpi-sub">≥ 20 institutions atteintes</div>
     </div>
     <div class="kpi" style="background:#fef3c7; border-color:#d9770622;">
-      <div class="kpi-value" style="color:#d97706;">+105%</div>
-      <div class="kpi-label">Network Growth</div>
-      <div class="kpi-sub">vs. previous benchmark (96)</div>
+      <div class="kpi-value" style="color:#d97706;">14</div>
+      <div class="kpi-label">Parents / Individus</div>
+      <div class="kpi-sub">sans organisation rattachée</div>
     </div>
   </div>
 
@@ -182,7 +182,7 @@
     <div id="tableBody"></div>
   </div>
 
-  <p class="footer">Source : KORA_Strategic_Contacts_060326_EN.xlsx &nbsp;·&nbsp; 197 contacts &nbsp;·&nbsp; Benchmark précédent : 96 contacts</p>
+  <p class="footer">Source : KORA_Strategic_Contacts_060326_EN.xlsx &nbsp;·&nbsp; 197 contacts &nbsp;·&nbsp; 168 institutions distinctes &nbsp;·&nbsp; Mise à jour : 06/03/2026</p>
 </div>
 
 <script>
@@ -192,9 +192,11 @@ const SECTORS = [
   'Research/Academia', 'Others'
 ];
 
-const PREV = [22, 21, 2, 1, 1, 16, 27, 46, 61];
-const NEW_ALL = [13, 1, 2, 0, 0, 3, 29, 48, 101];
-const NEW_ACT = [10, 1, 1, 0, 0, 2, 22, 41, 66];
+// PREV = benchmark précédent (comptage contacts)
+const PREV    = [22, 21, 2, 1, 1, 16, 27, 46, 61];
+// NEW_ALL / NEW_ACT = institutions distinctes (06/03/2026)
+const NEW_ALL = [18,  4, 2, 0, 14,  8, 21, 39, 62];
+const NEW_ACT = [14,  3, 1, 0,  7,  6, 18, 31, 41];
 const TARGET   = 20;
 
 const C = {
@@ -226,7 +228,7 @@ function buildDatasets(view) {
     return [
       target,
       {
-        label: 'Avant (96 contacts)',
+        label: 'Avant — benchmark contacts',
         data: PREV,
         borderColor: C.prev,
         backgroundColor: C.prevFill,
@@ -236,7 +238,7 @@ function buildDatasets(view) {
         order: 2,
       },
       {
-        label: 'Maintenant — Total (197)',
+        label: '06/03 — Institutions (168)',
         data: NEW_ALL,
         borderColor: C.navy,
         backgroundColor: C.navyFill,
@@ -250,7 +252,7 @@ function buildDatasets(view) {
     return [
       target,
       {
-        label: 'Total contacts (197)',
+        label: 'Institutions (168)',
         data: NEW_ALL,
         borderColor: C.navy,
         backgroundColor: C.navyFill,
@@ -260,7 +262,7 @@ function buildDatasets(view) {
         order: 2,
       },
       {
-        label: 'Contacts actifs (143)',
+        label: 'Institutions actives (121)',
         data: NEW_ACT,
         borderColor: C.blue,
         backgroundColor: C.blueFill,
@@ -278,13 +280,13 @@ function buildLegend(view) {
   const items = view === 'comparison'
     ? [
         { color: C.orange, label: 'Cible (20)', dashed: true },
-        { color: C.prev, label: 'Avant (96 contacts)' },
-        { color: C.navy, label: 'Maintenant — Total (197)' },
+        { color: C.prev, label: 'Avant — benchmark contacts' },
+        { color: C.navy, label: '06/03 — Institutions (168)' },
       ]
     : [
         { color: C.orange, label: 'Cible (20)', dashed: true },
-        { color: C.navy, label: 'Total contacts (197)' },
-        { color: C.blue, label: 'Contacts actifs (143)' },
+        { color: C.navy, label: 'Institutions (168)' },
+        { color: C.blue, label: 'Institutions actives (121)' },
       ];
 
   legend.innerHTML = items.map(item => {
@@ -343,7 +345,7 @@ function initChart(view) {
       scales: {
         r: {
           min: 0,
-          max: 55,
+          max: 70,
           ticks: {
             stepSize: 10,
             color: '#94a3b8',
