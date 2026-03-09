@@ -144,13 +144,14 @@ h1{font-size:1.6rem;font-weight:700;margin-bottom:4px}
 </table>
 
 <div style="text-align:center;margin:32px 0 16px">
-<button onclick="downloadCSV()" style="padding:10px 28px;border-radius:24px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px">⬇ Download CSV</button>
+<button onclick="downloadXLSX()" style="padding:10px 28px;border-radius:24px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:.3px">⬇ Download Excel</button>
 </div>
 
 </div><!-- container -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-function downloadCSV(){
+function downloadXLSX(){
   const rows=[['#','Category','Risk','Sub-categories','Researchers','Type','Coverage']];
   let currentCat='';
   document.querySelectorAll('.risk-table tbody tr').forEach(tr=>{
@@ -184,13 +185,11 @@ function downloadCSV(){
     }
     rows.push([num,currentCat,name,sub,researchers.join('; '),types.join('; '),cov]);
   });
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='KORA_Coverage_Dashboard.csv';
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:6},{wch:30},{wch:30},{wch:50},{wch:40},{wch:20},{wch:14}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'KORA Coverage');
+  XLSX.writeFile(wb,'KORA_Coverage_Dashboard.xlsx');
 }
 
 function filterResearchers(type){
