@@ -32,22 +32,21 @@
 
   /* KPI Strip */
   .kpis {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
     margin-bottom: 24px;
   }
   .kpi {
-    border-radius: 12px; padding: 12px 12px;
+    border-radius: 12px; padding: 14px 16px;
     border: 1px solid transparent;
   }
   .kpi-value { font-size: 26px; font-weight: 800; }
   .kpi-label { font-size: 11px; font-weight: 600; color: #334155; margin-top: 2px; }
   .kpi-featured {
-    border-radius: 14px; padding: 16px 18px;
+    border-radius: 14px; padding: 18px 20px;
     border: 2px solid #7c3aed44;
     box-shadow: 0 4px 16px rgba(124,58,237,0.15);
-    transform: scale(1.04);
   }
-  .kpi-featured .kpi-value { font-size: 34px; }
+  .kpi-featured .kpi-value { font-size: 38px; }
   .kpi-featured .kpi-label { font-size: 12px; }
   .kpi-sub { font-size: 10px; color: #64748b; margin-top: 3px; }
 
@@ -122,30 +121,30 @@
       <div class="dot"></div>
     </div>
     <h1>Ecosystem Penetration Map</h1>
-    <p class="subtitle">March 9, 2026</p>
+    <p class="subtitle">March 11, 2026</p>
   </div>
 
-  <!-- KPIs — 6-col grid: row1 = 3×(span2), row2 = 2×(span3) -->
+  <!-- KPIs — 6-col grid: row1 = 2×(span3) featured, row2 = 3×(span2) -->
   <div class="kpis">
-    <div class="kpi" style="background:#e8eefa; border-color:#1e3a5f22;">
-      <div class="kpi-value" style="color:#1e3a5f;">161</div>
-      <div class="kpi-label">Institutions Engaged</div>
-    </div>
-    <div class="kpi" style="background:#d1fae5; border-color:#05996922;">
-      <div class="kpi-value" style="color:#059669;">5</div>
-      <div class="kpi-label">Governments Engaged</div>
-    </div>
-    <div class="kpi" style="background:#fff1f2; border-color:#e1193322;">
-      <div class="kpi-value" style="color:#e11933;">0</div>
-      <div class="kpi-label">Major Media Publications</div>
-    </div>
-    <div class="kpi kpi-featured" style="background:#ede9fe;">
+    <div class="kpi kpi-featured" style="background:#ede9fe; grid-column:span 3;">
       <div class="kpi-value" style="color:#7c3aed;">3</div>
       <div class="kpi-label">EdTechs Ran KORA</div>
     </div>
-    <div class="kpi" style="background:#fef9c3; border-color:#ca890122;">
+    <div class="kpi kpi-featured" style="background:#fef9c3; border-color:#ca890122; box-shadow:0 4px 16px rgba(202,137,1,0.15); grid-column:span 3;">
       <div class="kpi-value" style="color:#ca8901;">1</div>
       <div class="kpi-label">AI Labs Ran KORA</div>
+    </div>
+    <div class="kpi" style="background:#e8eefa; border-color:#1e3a5f22; grid-column:span 2;">
+      <div class="kpi-value" style="color:#1e3a5f;">161</div>
+      <div class="kpi-label">Institutions Engaged</div>
+    </div>
+    <div class="kpi" style="background:#d1fae5; border-color:#05996922; grid-column:span 2;">
+      <div class="kpi-value" style="color:#059669;">5</div>
+      <div class="kpi-label">Governments Engaged</div>
+    </div>
+    <div class="kpi" style="background:#fff1f2; border-color:#e1193322; grid-column:span 2;">
+      <div class="kpi-value" style="color:#e11933;">0</div>
+      <div class="kpi-label">Major Media Publications</div>
     </div>
   </div>
 
