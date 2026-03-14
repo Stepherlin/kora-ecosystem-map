@@ -308,11 +308,11 @@
 const SECTORS = [
   'AI Labs', 'EdTech', 'School Districts', 'Teachers',
   'Parents/Family', 'Regulators/Policy', 'Nonprofits/Advocacy',
-  'Research/Academia', 'Media', 'Others'
+  'Research/Academia', 'Media', 'Investors', 'Others'
 ];
-const PREV    = [5, 17, 2, 0, 14,  6, 29, 38, 15, 35];
-const NEW_ALL = [17, 11, 2, 0,  0,  8, 37, 46, 13, 63];
-const NEW_ACT = [14,  9, 1, 0,  0,  7, 28, 39, 10, 35];
+const PREV    = [5, 17, 2, 0, 14,  6, 29, 38, 15,  0, 35];
+const NEW_ALL = [20, 18, 2, 0,  0, 13, 33, 48, 16, 13, 34];
+const NEW_ACT = [14, 13, 1, 0,  0, 11, 26, 34,  9,  5, 15];
 
 function initChart() {
   const ctx = document.getElementById('radarChart').getContext('2d');
@@ -322,7 +322,7 @@ function initChart() {
       labels: SECTORS,
       datasets: [
         {
-          label: 'Contacts (197)',
+          label: 'Contacts (197 total)',
           data: NEW_ALL,
           borderColor: 'rgba(15,14,12,0.8)',
           backgroundColor: 'rgba(15,14,12,0.08)',
@@ -332,7 +332,7 @@ function initChart() {
           order: 2,
         },
         {
-          label: 'Active (143)',
+          label: 'Active (128)',
           data: NEW_ACT,
           borderColor: 'rgba(245,183,0,0.9)',
           backgroundColor: 'rgba(245,183,0,0.12)',
@@ -383,8 +383,8 @@ function initChart() {
 
   const legend = document.getElementById('legend');
   legend.innerHTML = [
-    { color: 'rgba(15,14,12,0.8)', label: 'Contacts (197)' },
-    { color: 'rgba(245,183,0,0.9)', label: 'Active (143)' },
+    { color: 'rgba(15,14,12,0.8)', label: 'Contacts (197 total)' },
+    { color: 'rgba(245,183,0,0.9)', label: 'Active (128)' },
   ].map(d =>
     `<div class="legend-item"><div class="legend-dot" style="background:${d.color};"></div>${d.label}</div>`
   ).join('');
