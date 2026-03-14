@@ -118,9 +118,11 @@
     font-family: 'DM Mono', monospace;
     font-size: 9px; letter-spacing: .15em;
     text-transform: uppercase;
-    color: var(--muted);
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--rule);
+    color: #5a3e00;
+    background: var(--accent);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 2px;
     margin-bottom: 16px;
   }
 
@@ -222,7 +224,7 @@
     <div class="hd-logo-text">kora</div>
   </div>
   <h1>Ecosystem <em>Penetration Map</em></h1>
-  <div class="hd-meta">Last updated — March 11, 2026</div>
+  <div class="hd-meta">Last updated — March 14, 2026</div>
 </div>
 
 <div class="page">
@@ -230,11 +232,11 @@
   <!-- KPIs — row 1: EdTech + AI Labs (featured) -->
   <div class="kpi-row-top">
     <div class="kpi-card-featured">
-      <div class="kpi-num-lg">3</div>
+      <div class="kpi-num-lg">1</div>
       <div class="kpi-label">EdTech Users</div>
     </div>
     <div class="kpi-card-featured accent-top">
-      <div class="kpi-num-lg accent">1</div>
+      <div class="kpi-num-lg accent">10</div>
       <div class="kpi-label">AI Labs Users</div>
     </div>
   </div>
@@ -242,11 +244,11 @@
   <!-- KPIs — row 2: secondary metrics -->
   <div class="kpi-row-bottom">
     <div class="kpi-card">
-      <div class="kpi-num-sm">161</div>
+      <div class="kpi-num-sm">197</div>
       <div class="kpi-label">Institutions Engaged</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-num-sm">5</div>
+      <div class="kpi-num-sm">3</div>
       <div class="kpi-label">Governments Engaged</div>
     </div>
     <div class="kpi-card">
@@ -302,7 +304,7 @@
     </div>
   </div>
 
-  <p class="footer">Last updated — March 11, 2026</p>
+  <p class="footer">Last updated — March 14, 2026 · Source: KORA_Strategic_Contacts_060326_EN.xlsx · 197 contacts</p>
 
 </div>
 
@@ -312,8 +314,9 @@ const SECTORS = [
   'Parents/Family', 'Regulators/Policy', 'Nonprofits/Advocacy',
   'Research/Academia', 'Media', 'Others'
 ];
-const NEW_ALL = [5, 17, 2, 0, 14,  6, 29, 38, 15, 35];
-const NEW_ACT = [5, 11, 1, 0,  7,  5, 24, 31, 12, 21];
+const PREV    = [5, 17, 2, 0, 14,  6, 29, 38, 15, 35];
+const NEW_ALL = [13,  1, 2, 0,  0,  3, 31, 46, 15, 86];
+const NEW_ACT = [10,  1, 1, 0,  0,  2, 24, 39, 12, 54];
 
 function initChart() {
   const ctx = document.getElementById('radarChart').getContext('2d');
@@ -323,7 +326,7 @@ function initChart() {
       labels: SECTORS,
       datasets: [
         {
-          label: 'Institutions (161)',
+          label: 'Institutions (197)',
           data: NEW_ALL,
           borderColor: 'rgba(15,14,12,0.8)',
           backgroundColor: 'rgba(15,14,12,0.08)',
@@ -333,7 +336,7 @@ function initChart() {
           order: 2,
         },
         {
-          label: 'Active (117)',
+          label: 'Active (143)',
           data: NEW_ACT,
           borderColor: 'rgba(245,183,0,0.9)',
           backgroundColor: 'rgba(245,183,0,0.12)',
@@ -350,9 +353,9 @@ function initChart() {
       animation: { duration: 500 },
       scales: {
         r: {
-          min: 0, max: 50,
+          min: 0, max: 100,
           ticks: {
-            stepSize: 10,
+            stepSize: 20,
             color: '#c8c0b0',
             font: { size: 10, family: "'DM Mono', monospace" },
             backdropColor: 'transparent',
@@ -384,8 +387,8 @@ function initChart() {
 
   const legend = document.getElementById('legend');
   legend.innerHTML = [
-    { color: 'rgba(15,14,12,0.8)', label: 'Institutions (161)' },
-    { color: 'rgba(245,183,0,0.9)', label: 'Active (117)' },
+    { color: 'rgba(15,14,12,0.8)', label: 'Institutions (197)' },
+    { color: 'rgba(245,183,0,0.9)', label: 'Active (143)' },
   ].map(d =>
     `<div class="legend-item"><div class="legend-dot" style="background:${d.color};"></div>${d.label}</div>`
   ).join('');
