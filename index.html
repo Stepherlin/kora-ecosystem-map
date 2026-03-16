@@ -240,15 +240,15 @@ body {
   <!-- KPIs — row 2: secondary metrics -->
   <div class="kpi-row-bottom">
     <div class="kpi-card">
-      <div class="kpi-num-sm">210</div>
+      <div class="kpi-num-sm">207</div>
       <div class="kpi-label">Contacts Engaged</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-num-sm">5</div>
+      <div class="kpi-num-sm">14</div>
       <div class="kpi-label">Governments Engaged</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-num-sm">0</div>
+      <div class="kpi-num-sm">4</div>
       <div class="kpi-label">Major Media Publications</div>
     </div>
   </div>
@@ -330,7 +330,7 @@ function initChart() {
       labels: SECTORS,
       datasets: [
         {
-          label: 'Contacts (210 total)',
+          label: 'Contacts (207 total)',
           data: NEW_ALL,
           borderColor: 'rgba(15,14,12,0.8)',
           backgroundColor: 'rgba(15,14,12,0.08)',
@@ -340,7 +340,7 @@ function initChart() {
           order: 2,
         },
         {
-          label: 'Active (141)',
+          label: 'Active (139)',
           data: NEW_ACT,
           borderColor: 'rgba(245,183,0,0.9)',
           backgroundColor: 'rgba(245,183,0,0.12)',
@@ -391,8 +391,8 @@ function initChart() {
 
   const legend = document.getElementById('legend');
   legend.innerHTML = [
-    { color: 'rgba(15,14,12,0.8)', label: 'Contacts (210 total)' },
-    { color: 'rgba(245,183,0,0.9)', label: 'Active (141)' },
+    { color: 'rgba(15,14,12,0.8)', label: 'Contacts (207 total)' },
+    { color: 'rgba(245,183,0,0.9)', label: 'Active (139)' },
   ].map(d =>
     `<div class="legend-item"><div class="legend-dot" style="background:${d.color};"></div>${d.label}</div>`
   ).join('');
